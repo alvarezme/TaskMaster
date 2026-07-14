@@ -1,61 +1,54 @@
-const API_URL = 'http://localhost:3000/api/auth';
+const URL_API = 'http://localhost:3000/api/autenticacion';
 
-// REGISTRO
-const registerForm = document.getElementById('register-form');
-if (registerForm) {
-  registerForm.addEventListener('submit', async (e) => {
+const formularioLogin = document.getElementById('formulario-login');
+const formularioRegistro = document.getElementById('formulario-registro');
+
+// Registrar Usuario
+if (formularioRegistro) {
+  formularioRegistro.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const name = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
-    const password = document.getElementById('reg-password').value;
+    const nombre = document.getElementById('reg-nombre').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const contrasena = document.getElementById('reg-contrasena').value;
 
     try {
-      const response = await fetch(`${API_URL}/register`, {
+      const respuesta = await fetch(`${URL_API}/registro`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ nombre, email, contrasena })
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Error al registrarse');
+      const datos = await respuesta.json();
+      if (!respuesta.ok) throw new Error(datos.mensaje);
 
-      // Guardamos únicamente el usuario directamente
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      alert('¡Registro exitoso!');
-      window.location.href = 'tareas.html'; 
-
+      alert('Registro completado. Ya puedes iniciar sesión.');
+      formularioRegistro.reset();
     } catch (error) {
       alert(error.message);
     }
   });
 }
 
-// INICIO DE SESIÓN
-const loginForm = document.getElementById('login-form');
-if (loginForm) {
-  loginForm.addEventListener('submit', async (e) => {
+// Iniciar Sesión
+if (formularioLogin) {
+  formularioLogin.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
+    const email = document.getElementById('login-email').value.trim();
+    const contrasena = document.getElementById('login-contrasena').value;
 
     try {
-      const response = await fetch(`${API_URL}/login`, {
+      const respuesta = await fetch(`${URL_API}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, contrasena })
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Error al iniciar sesión');
+      const datos = await respuesta.json();
+      if (!respuesta.ok) throw new Error(datos.mensaje);
 
-      localStorage.setItem('user', JSON.stringify(data.user));
-
-      alert('¡Sesión iniciada!');
+      // Guardamos la sesión localmente
+      localStorage.setItem('usuario', JSON.stringify(datos));
       window.location.href = 'tareas.html';
-
     } catch (error) {
       alert(error.message);
     }
