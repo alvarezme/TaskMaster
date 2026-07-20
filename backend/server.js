@@ -6,7 +6,7 @@ const sequelize = require('./configuraciones/db');
 const Usuario = require('./modelos/Usuario');
 const Tarea = require('./modelos/Tarea');
 
-// Relaciones explícitas antes de sincronizar para evitar errores al sincronizar la base de datos
+// para evitar errores al sincronizar la base de datos
 Usuario.hasMany(Tarea, { foreignKey: 'usuarioId' });
 Tarea.belongsTo(Usuario, { foreignKey: 'usuarioId' });
 
@@ -29,7 +29,6 @@ const PUERTO = process.env.PORT || 3000;
 async function iniciarServidor() {
   try {
     await sequelize.authenticate();
-    // Usamos sync normal sin alter para proteger los datos de SQLite
     await sequelize.sync();
     console.log('La base esta andando');
     app.listen(PUERTO, () => console.log(`🚀 Servidor en http://localhost:${PUERTO}`));
